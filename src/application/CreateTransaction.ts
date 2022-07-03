@@ -1,9 +1,9 @@
 import pgp from 'pg-promise';
-import { ITransaction, ITransactionDTO } from './ITransaction';
+import TransactionRepository from '../domain/repository/TransactionRepository';
+export default class CreateTransaction {
 
-export default class CreateTransaction implements ITransaction {
-
-  constructor() {}
+  constructor (readonly transactionRepository: TransactionRepository) {
+	}
 
   async execute(input: InputNewTransaction): Promise<void> {
   const connection = pgp()("postgres://cassiofreitas:123456@localhost:5432/postgres");

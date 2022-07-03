@@ -1,9 +1,12 @@
 import CreateTransaction from "../src/application/CreateTransaction";
 import GetTransaction from "../src/application/GetTransaction";
+import PostgreSQLAdapter from "../src/infra/database/PostgreSQLAdapter";
+import TransactionDatabaseRepository from "../src/infra/provider/TransactionDatabaseRepository";
 
 describe('CreateTransaction use case', () => {
   test('Should create a new transaction', async () => {
-
+    const connection = new PostgreSQLAdapter();
+    const transactionRepository = new TransactionDatabaseRepository(connection);
     const code = `${Math.floor(Math.random() * 1000)}`;
     const input = {
       code,
@@ -11,9 +14,9 @@ describe('CreateTransaction use case', () => {
       numberInstallments: 12,
       paymentMethod: "credit_card",
     }
-    const createTransaction = new CreateTransaction();
+    const createTransaction = new CreateTransaction(transactionRepository);
 	  await createTransaction.execute(input);
-    const getTransaction = new GetTransaction();
+    const getTransaction = new GetTransaction(transactionRepository);
 	  const transaction = await getTransaction.execute(code);
 
     expect(transaction.code).toBe(code);
